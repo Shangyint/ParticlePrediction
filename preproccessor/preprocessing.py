@@ -5,6 +5,7 @@ import pandas as pd
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 current_data_dir = 'test_0'
 os.chdir('../data/' + current_data_dir)
+num_spheres = len(os.listdir(os.getcwd()))
 
 def merging_files(velocity=False):
     """
@@ -38,6 +39,9 @@ def to_supervised(data, n_in=1, n_out=1, drop_NaN=True, multi_sphere=False, sphe
     if drop_NaN:
         result.dropna(inplace=True)
     return result
+
+def normalizing_data(data):
+    pass
 
 def main():
     data = merging_files()
