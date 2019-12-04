@@ -3,6 +3,7 @@ sys.path.append("..")
 
 import preproccessor.preprocessing as prep
 import os
+import math
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
@@ -11,7 +12,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # constant for training
 num_spheres = prep.num_spheres
-time_predicted = 2
+time_predicted = 5
 velocity = False
 if not velocity:
     num_features = 3
@@ -21,7 +22,7 @@ def LSTM_model(shape):
     model = Sequential()
     model.add(LSTM(50, input_shape=(shape[1], shape[2])))
     model.add(Dense(3))
-    model.compile(loss='mae', optimizer='adam')
+    model.compile(loss='mean_squared_error', optimizer='sgd')
     return model
 
 def main():
@@ -41,7 +42,8 @@ def main():
     history = model.fit(train_X, train_y, epochs=50, 
         batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
     yhat = model.predict(test_X)
-
+    rmse = math.sqrt(mean_squared_error(test_y, yhat))
+    print(rmse)
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     
